@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2A81A3E8-2833-4E06-B178-820367AE05CA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Monicais.Core</RootNamespace>
+    <AssemblyName>Monicais.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Monicais\Core1\AbstractRole.cs" />
+    <Compile Include="Monicais\Core1\BattleMechanism.cs" />
+    <Compile Include="Monicais\Core1\DefaultSkillCondition.cs" />
+    <Compile Include="Monicais\Core1\GlobalEnvironment.cs" />
+    <Compile Include="Monicais\Core1\IAction.cs" />
+    <Compile Include="Monicais\Core1\IActionArgs.cs" />
+    <Compile Include="Monicais\Core1\INameable.cs" />
+    <Compile Include="Monicais\Core1\ISkillCondition.cs" />
+    <Compile Include="Monicais\Core1\Item.cs" />
+    <Compile Include="Monicais\Core1\ItemType.cs" />
+    <Compile Include="Monicais\Core1\LocaleUpdater.cs" />
+    <Compile Include="Monicais\Core1\LocalizationManager.cs" />
+    <Compile Include="Monicais\Core1\MonoBehaviourFuncs.cs" />
+    <Compile Include="Monicais\Core1\NonActionEntityStatus.cs" />
+    <Compile Include="Monicais\Core\Action.cs" />
+    <Compile Include="Monicais\Core\Environment.cs" />
+    <Compile Include="Monicais\Core\Displayable.cs" />
+    <Compile Include="Monicais\Core\Property.cs" />
+    <Compile Include="Monicais\Core\Skill.cs" />
+    <Compile Include="Monicais\Core\Entity.cs" />
+    <Compile Include="Monicais\Core\Item.cs" />
+    <Compile Include="Monicais\Core\Role.cs" />
+    <Compile Include="Monicais\Core1\Skill.cs" />
+    <Compile Include="Monicais\Core1\SkillArgs.cs" />
+    <Compile Include="Monicais\Core1\SkillCallBack.cs" />
+    <Compile Include="Monicais\Core1\SkillInfo.cs" />
+    <Compile Include="Monicais\Core1\SkillList.cs" />
+    <Compile Include="Monicais\Core1\SkillMechansim.cs" />
+    <Compile Include="Monicais\Core1\SkillUpgrader.cs" />
+    <Compile Include="Monicais\Core1\SkillUsingProcess.cs" />
+    <Compile Include="Monicais\Core1\SkillUsingType.cs" />
+    <Compile Include="Monicais\Property1\AbstractProperty.cs" />
+    <Compile Include="Monicais\Property1\AfterPropertyListCreate.cs" />
+    <Compile Include="Monicais\Property1\Attributes.cs" />
+    <Compile Include="Monicais\Property1\DefaultEffect.cs" />
+    <Compile Include="Monicais\Property1\EffectID.cs" />
+    <Compile Include="Monicais\Property1\EffectManager.cs" />
+    <Compile Include="Monicais\Property1\EffectProcessor.cs" />
+    <Compile Include="Monicais\Property1\EffectSupport.cs" />
+    <Compile Include="Monicais\Property1\EffectSupportUtil.cs" />
+    <Compile Include="Monicais\Property1\EffectType.cs" />
+    <Compile Include="Monicais\Property1\EffectUpdater.cs" />
+    <Compile Include="Monicais\Property1\EventListener.cs" />
+    <Compile Include="Monicais\Property1\EventListenerUtil.cs" />
+    <Compile Include="Monicais\Property1\HasEffectProperty.cs" />
+    <Compile Include="Monicais\Property1\IEffect.cs" />
+    <Compile Include="Monicais\Property1\IEffectList.cs" />
+    <Compile Include="Monicais\Property1\IProperty.cs" />
+    <Compile Include="Monicais\Property1\IPropertyCreater.cs" />
+    <Compile Include="Monicais\Property1\IRestrictable.cs" />
+    <Compile Include="Monicais\Property1\NonEffectProperty.cs" />
+    <Compile Include="Monicais\Property1\ParentPropertyUtil.cs" />
+    <Compile Include="Monicais\Property1\Priority.cs" />
+    <Compile Include="Monicais\Property1\PropertyComparer.cs" />
+    <Compile Include="Monicais\Property1\PropertyID.cs" />
+    <Compile Include="Monicais\Property1\PropertyList.cs" />
+    <Compile Include="Monicais\Property1\PropertyListManager.cs" />
+    <Compile Include="Monicais\Property1\PropertyManager.cs" />
+    <Compile Include="Monicais\Property1\ReadOnlyAttributes.cs" />
+    <Compile Include="Monicais\Property1\RestorabeEffectList.cs" />
+    <Compile Include="Monicais\Property1\RestorableProperty.cs" />
+    <Compile Include="Monicais\Property1\Restrictable.cs" />
+    <Compile Include="Monicais\Property1\Restrictor.cs" />
+    <Compile Include="Monicais\Property1\RestrictorUtil.cs" />
+    <Compile Include="Monicais\Property1\SimpleProperty.cs" />
+    <Compile Include="Monicais\Property1\SimplePropertyCreater.cs" />
+    <Compile Include="Monicais\Property1\UnrecoverableEffectList.cs" />
+    <Compile Include="Monicais\Property1\UnrecoverableProperty.cs" />
+    <Compile Include="Monicais\Property1\ValidValue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Monicais.Plugin\Monicais.Plugin.csproj">
+      <Project>{a79ddb4a-94ca-4fe5-992b-e03feee02e53}</Project>
+      <Name>Monicais.Plugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Monicais.ThrowHelper\Monicais.ThrowHelper.csproj">
+      <Project>{20b0a54b-3579-4939-8659-0a6e06a26458}</Project>
+      <Name>Monicais.ThrowHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
