@@ -1,9 +1,10 @@
-﻿namespace Monicais.Property
+﻿
+using Monicais.ThrowHelper;
+using System;
+using System.Collections;
+
+namespace Monicais.Property
 {
-    using Monicais.ThrowHelper;
-    using System;
-    using System.Collections;
-    using System.Reflection;
 
     [Serializable]
     public sealed class PropertyList
@@ -12,54 +13,42 @@
 
         public PropertyList(IProperty[] pros)
         {
-            this.properties = pros;
+            properties = pros;
         }
 
         public void AddEffect(IEffect effect)
         {
             if (effect == null)
-            {
                 ArgumentNull.Throw("effect");
-            }
             this[effect.AffectTo].AddEffect(effect);
         }
 
         public IEnumerator GetEnumerator()
         {
-            return this.properties.GetEnumerator();
+            return properties.GetEnumerator();
         }
 
         public void RemoveEffect(IEffect effect)
         {
             if (effect == null)
-            {
                 ArgumentNull.Throw("effect");
-            }
             this[effect.AffectTo].RemoveEffect(effect.ID);
         }
 
         public void Update()
         {
-            foreach (IProperty property in this.properties)
-            {
+            foreach (IProperty property in properties)
                 property.Update();
-            }
         }
 
         public int Count
         {
-            get
-            {
-                return this.properties.Length;
-            }
+            get { return properties.Length; }
         }
 
         public IProperty this[PropertyID key]
         {
-            get
-            {
-                return this.properties[key.Index];
-            }
+            get { return properties[key.Index]; }
         }
     }
 }

@@ -20,9 +20,9 @@ namespace Monicais.ConsoleTest
             SimplePropertyCreater creater = new SimplePropertyCreater();
             creater.AddAfterCreate(delegate (PropertyList pl)
             {
-                EventListenerUtil.SetOriginalFromFinalIfGreaterEqual(pl[pid_hp], pl[pid_hp_max]);
-                EventListenerUtil.SetOriginalFromFinalIfGreaterEqual(pl[pid_mp], pl[pid_mp_max]);
-                EventListenerUtil.SetOriginalFromFinalIfGreaterEqual(pl[pid_vi], pl[pid_vi_max]);
+                EffectListenerUtil.SetOriginalFromFinalIfGreaterEqual(pl[pid_hp], pl[pid_hp_max]);
+                EffectListenerUtil.SetOriginalFromFinalIfGreaterEqual(pl[pid_mp], pl[pid_mp_max]);
+                EffectListenerUtil.SetOriginalFromFinalIfGreaterEqual(pl[pid_vi], pl[pid_vi_max]);
             });
             creater.setCreaterFor(pid_hp, SimplePropertyCreater.GetUnrecoverablePropertyCreater(100));
             creater.setCreaterFor(pid_hp_max, SimplePropertyCreater.GetRestorablePropertyCreater(100));

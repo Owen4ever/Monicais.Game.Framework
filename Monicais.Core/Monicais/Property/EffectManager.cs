@@ -1,12 +1,15 @@
-﻿namespace Monicais.Property
+﻿
+using Monicais.ThrowHelper;
+using System;
+using System.Collections.Generic;
+
+namespace Monicais.Property
 {
-    using Monicais.ThrowHelper;
-    using System;
-    using System.Collections.Generic;
 
     [Serializable]
     public sealed class EffectManager
     {
+
         private List<EffectID> bothBuffEffects = new List<EffectID>();
         private List<EffectID> buffEffects = new List<EffectID>();
         private List<EffectID> debuffEffects = new List<EffectID>();
@@ -17,46 +20,42 @@
         public void AddEffect(EffectType type, IEffect effect)
         {
             if (effect == null)
-            {
                 ArgumentNull.Throw("effect");
-            }
             EffectID iD = effect.ID;
-            if (this.effects.ContainsKey(iD))
-            {
+            if (effects.ContainsKey(iD))
                 AlreadyContain.Throw("effect");
-            }
-            this.effects.Add(iD, effect);
+            effects.Add(iD, effect);
             switch (type)
             {
                 case EffectType.NORMAL:
-                    this.normalEffects.Add(iD);
+                    normalEffects.Add(iD);
                     break;
 
                 case EffectType.BUFF:
-                    this.buffEffects.Add(iD);
+                    buffEffects.Add(iD);
                     break;
 
                 case EffectType.DEBUFF:
-                    this.debuffEffects.Add(iD);
+                    debuffEffects.Add(iD);
                     break;
 
                 case EffectType.BOTH_BUFF:
-                    this.debuffEffects.Add(iD);
-                    this.buffEffects.Add(iD);
-                    this.bothBuffEffects.Add(iD);
+                    debuffEffects.Add(iD);
+                    buffEffects.Add(iD);
+                    bothBuffEffects.Add(iD);
                     break;
 
                 case EffectType.ALL:
-                    this.normalEffects.Add(iD);
-                    this.debuffEffects.Add(iD);
-                    this.buffEffects.Add(iD);
+                    normalEffects.Add(iD);
+                    debuffEffects.Add(iD);
+                    buffEffects.Add(iD);
                     break;
             }
         }
 
         public EffectID GetEffectID(string id)
         {
-            return this.ids.Find(eid => eid.ID == id);
+            return ids.Find(eid => eid.ID == id);
         }
 
         public List<EffectID> GetEffectIDsViaType(EffectType type)
@@ -64,19 +63,19 @@
             switch (type)
             {
                 case EffectType.NORMAL:
-                    return this.normalEffects;
+                    return normalEffects;
 
                 case EffectType.BUFF:
-                    return this.buffEffects;
+                    return buffEffects;
 
                 case EffectType.DEBUFF:
-                    return this.debuffEffects;
+                    return debuffEffects;
 
                 case EffectType.BOTH_BUFF:
-                    return this.bothBuffEffects;
+                    return bothBuffEffects;
 
                 case EffectType.ALL:
-                    return this.ids;
+                    return ids;
             }
             ArgumentOutOfRange.Throw("UsingType");
             return null;
@@ -85,10 +84,10 @@
         public bool RemoveEffect(EffectID effectID)
         {
             if (effectID == null)
-            {
                 ArgumentNull.Throw("effectID");
-            }
-            return ((this.ids.Remove(effectID) & this.effects.Remove(effectID)) & (((this.debuffEffects.Remove(effectID) | this.buffEffects.Remove(effectID)) | this.bothBuffEffects.Remove(effectID)) | this.normalEffects.Remove(effectID)));
+            return ((ids.Remove(effectID) & effects.Remove(effectID))
+                & (((debuffEffects.Remove(effectID) | buffEffects.Remove(effectID))
+                | bothBuffEffects.Remove(effectID)) | normalEffects.Remove(effectID)));
         }
     }
 }
