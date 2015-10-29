@@ -8,6 +8,36 @@ namespace Monicais.Core
 
     public delegate void OnDispose();
 
+    public static class GlobalEnvironment
+    {
+        private static MonoEnvironment monoEnv = new MonoEnvironment();
+
+        public static event OnDispose OnDispose;
+
+        public static void Dispose()
+        {
+            OnDispose();
+            monoEnv.Dispose();
+        }
+
+        public static MonoEnvironment MonoEnvironment
+        {
+            get { return monoEnv; }
+            private set
+            {
+                if (value == null)
+                    monoEnv.Dispose();
+                else
+                {
+                    if (monoEnv != null)
+                        monoEnv.Dispose();
+                    monoEnv = value;
+                }
+            }
+        }
+    }
+
+
     public class MonoEnvironment : IDisposable
     {
 
@@ -15,12 +45,12 @@ namespace Monicais.Core
 
         public MonoEnvironment()
         {
-            this.OnDispose = <> c.<> 9__0_0 ?? (<> c.<> 9__0_0 = new Monicais.Core.OnDispose(<> c.<> 9.<.ctor > b__0_0));
-            this.EffectManager = new Monicais.Property.EffectManager();
-            this.SkillManager = new SkillList();
-            this.PropertyManager = new Monicais.Property.PropertyManager();
-            this.PluginEnvironment = new Monicais.Plugin.PluginEnvironment();
-            this.Attributes = new Monicais.Property.Attributes();
+            OnDispose = () => { };
+            EffectManager = new EffectManager();
+            SkillManager = new SkillList();
+            PropertyManager = new PropertyManager();
+            PluginEnvironment = new PluginEnvironment();
+            Attributes = new Attributes();
         }
 
         public MonoEnvironment(MonoEnvironment env)

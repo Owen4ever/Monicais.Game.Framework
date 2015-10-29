@@ -9,59 +9,43 @@ namespace Monicais.Plugin
     {
 
         public DefaultPluginInfo(string id, string fullName, string simpleName, string virsion, string author)
-            : this(id, fullName, simpleName, virsion, author, null, null)        {        }
+            : this(id, fullName, simpleName, virsion, author, null, null) { }
 
         public DefaultPluginInfo(string id, string fullName, string simpleName,
             string virsion, string author, List<string> preconditions)
-            : this(id, fullName, simpleName, virsion, author, null, preconditions)        {        }
+            : this(id, fullName, simpleName, virsion, author, null, preconditions) { }
 
         public DefaultPluginInfo(string id, string fullName, string simpleName,
             string virsion, string author, string description)
-            : this(id, fullName, simpleName, virsion, author, description, null)        {        }
+            : this(id, fullName, simpleName, virsion, author, description, null) { }
 
         public DefaultPluginInfo(string id, string fullName, string simpleName,
             string virsion, string author, string description, List<string> preconditions)
         {
             if (string.IsNullOrWhiteSpace(id))
-            {
                 ArgumentNull.Throw("id");
-            }
             if (string.IsNullOrWhiteSpace(fullName))
-            {
                 ArgumentNull.Throw("fullName");
-            }
             if (string.IsNullOrWhiteSpace(simpleName))
-            {
                 ArgumentNull.Throw("simpleName");
-            }
             if (string.IsNullOrWhiteSpace(virsion))
-            {
                 ArgumentNull.Throw("virsion");
-            }
             if (string.IsNullOrWhiteSpace(author))
-            {
                 ArgumentNull.Throw("author");
-            }
-            this.ID = id;
-            this.FullName = fullName;
-            this.SimpleName = simpleName;
-            this.Virsion = virsion;
-            this.Author = author;
+            ID = id;
+            FullName = fullName;
+            SimpleName = simpleName;
+            Virsion = virsion;
+            Author = author;
             if (string.IsNullOrWhiteSpace(description))
-            {
-                this.Description = string.Empty;
-            } else
-            {
-                this.Description = description;
-            }
-            if ((preconditions == null) || (preconditions.Count == 0))
-            {
-                this.Preconditions = new List<string>().AsReadOnly();
-            } else
-            {
-                this.Preconditions = preconditions.AsReadOnly();
-            }
-            this.HasPreconditions = this.Preconditions.Count == 0;
+                Description = string.Empty;
+            else
+                Description = description;
+            if (preconditions == null || preconditions.Count == 0)
+                Preconditions = new List<string>().AsReadOnly();
+            else
+                Preconditions = preconditions.AsReadOnly();
+            HasPreconditions = Preconditions.Count == 0;
         }
 
         public string Author { get; private set; }
@@ -92,25 +76,15 @@ namespace Monicais.Plugin
             PluginTestSuccessFlag isSuccessFlag, PluginMessage getMsg)
         {
             if (info == null)
-            {
                 ArgumentNull.Throw("info");
-            }
             if (load == null)
-            {
                 ArgumentNull.Throw("load");
-            }
             if (unload == null)
-            {
                 ArgumentNull.Throw("unload");
-            }
             if (isSuccessFlag == null)
-            {
                 ArgumentNull.Throw("isSuccessFlag");
-            }
             if (getMsg == null)
-            {
                 ArgumentNull.Throw("getMsg");
-            }
             this.Info = info;
             this.load = load;
             this.unload = unload;

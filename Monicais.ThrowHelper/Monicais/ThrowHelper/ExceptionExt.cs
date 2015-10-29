@@ -13,4 +13,3 @@ namespace Monicais.ThrowHelper
         public AlreadyContainException(string msg, Exception innerException) : base(msg, innerException) { }
     }
 }
-

@@ -39,39 +39,22 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Monicais\Core1\AbstractRole.cs" />
-    <Compile Include="Monicais\Core1\BattleMechanism.cs" />
-    <Compile Include="Monicais\Core1\DefaultSkillCondition.cs" />
-    <Compile Include="Monicais\Core1\GlobalEnvironment.cs" />
-    <Compile Include="Monicais\Core1\IAction.cs" />
-    <Compile Include="Monicais\Core1\IActionArgs.cs" />
-    <Compile Include="Monicais\Core1\INameable.cs" />
-    <Compile Include="Monicais\Core1\ISkillCondition.cs" />
-    <Compile Include="Monicais\Core1\Item.cs" />
-    <Compile Include="Monicais\Core1\ItemType.cs" />
-    <Compile Include="Monicais\Core1\LocaleUpdater.cs" />
-    <Compile Include="Monicais\Core1\LocalizationManager.cs" />
-    <Compile Include="Monicais\Core1\MonoBehaviourFuncs.cs" />
-    <Compile Include="Monicais\Core1\NonActionEntityStatus.cs" />
+    <Compile Include="Monicais\Core\Role.cs" />
+    <Compile Include="Monicais\Core\Mechanism\BattleMechanism.cs" />
+    <Compile Include="Monicais\Core\Item.cs" />
     <Compile Include="Monicais\Core\Action.cs" />
+    <Compile Include="Monicais\Core\Util\Locale.cs" />
     <Compile Include="Monicais\Core\Environment.cs" />
     <Compile Include="Monicais\Core\Displayable.cs" />
-    <Compile Include="Monicais\Core\Property.cs" />
     <Compile Include="Monicais\Core\Skill.cs" />
     <Compile Include="Monicais\Core\Entity.cs" />
-    <Compile Include="Monicais\Core\Item.cs" />
-    <Compile Include="Monicais\Core\Role.cs" />
-    <Compile Include="Monicais\Core1\Skill.cs" />
-    <Compile Include="Monicais\Core1\SkillArgs.cs" />
-    <Compile Include="Monicais\Core1\SkillCallBack.cs" />
-    <Compile Include="Monicais\Core1\SkillInfo.cs" />
-    <Compile Include="Monicais\Core1\SkillList.cs" />
-    <Compile Include="Monicais\Core1\SkillMechansim.cs" />
-    <Compile Include="Monicais\Core1\SkillUpgrader.cs" />
-    <Compile Include="Monicais\Core1\SkillUsingProcess.cs" />
-    <Compile Include="Monicais\Core1\SkillUsingType.cs" />
+    <Compile Include="Monicais\Core\SkillList.cs" />
+    <Compile Include="Monicais\Core\Mechanism\SkillMechansim.cs" />
     <Compile Include="Monicais\Property\Attributes.cs" />
     <Compile Include="Monicais\Property\EffectListImpl.cs" />
     <Compile Include="Monicais\Property\Restrictor.cs" />
