@@ -10,9 +10,6 @@ namespace Monicais.Core
 
     public static class GlobalEnvironment
     {
-        private static MonoEnvironment monoEnv = new MonoEnvironment();
-
-        public static event OnDispose OnDispose;
 
         public static void Dispose()
         {
@@ -35,6 +32,9 @@ namespace Monicais.Core
                 }
             }
         }
+        private static MonoEnvironment monoEnv = new MonoEnvironment();
+
+        public static event OnDispose OnDispose;
     }
 
 

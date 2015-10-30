@@ -42,13 +42,15 @@ namespace Monicais.ConsoleTest
             Console.ReadKey(true);
             IProperty property = list[pid_hp];
             Console.WriteLine(property);
-            property.AddEffect(new DefaultEffect(new EffectID("Reduce 10 hp", 0), pid_hp, null, <> c.<> 9__0_1 ?? (<> c.<> 9__0_1 = new EffectProcessor(<> c.<> 9.< Main > b__0_1)), <> c.<> 9__0_2 ?? (<> c.<> 9__0_2 = new EffectUpdater(<> c.<> 9.< Main > b__0_2))));
+            property.AddEffect(new DefaultEffect(new EffectID("Reduce 10 hp", 0), pid_hp, null,
+                (Attributes pa, Attributes ea, ref int v) => v -= 10, ea => false));
             Console.WriteLine(property);
             Console.WriteLine();
             Console.ReadKey(true);
             IProperty property2 = list[pid_hp_max];
             Console.WriteLine(property2);
-            property2.AddEffect(new DefaultEffect(new EffectID("Reduce 50% max hp", 0), pid_hp_max, null, <> c.<> 9__0_3 ?? (<> c.<> 9__0_3 = new EffectProcessor(<> c.<> 9.< Main > b__0_3)), <> c.<> 9__0_4 ?? (<> c.<> 9__0_4 = new EffectUpdater(<> c.<> 9.< Main > b__0_4))));
+            property2.AddEffect(new DefaultEffect(new EffectID("Reduce 50% max hp", 0), pid_hp_max, null,
+                (Attributes pa, Attributes ea, ref int v) => v = v >> 1, ea => false));
             Console.WriteLine(property2);
             Console.WriteLine(property);
             Console.WriteLine();
@@ -59,36 +61,5 @@ namespace Monicais.ConsoleTest
             Console.WriteLine("\nFinish");
             Console.ReadKey(true);
         }
-
-        [Serializable, CompilerGenerated]
-        private sealed class <>c
-        {
-            public static readonly Program.<>c<>9 = new Program.<>c();
-        public static EffectProcessor<>9__0_1;
-            public static EffectUpdater<>9__0_2;
-            public static EffectProcessor<>9__0_3;
-            public static EffectUpdater<>9__0_4;
-
-            internal void <Main>b__0_1(Attributes pa, Attributes ea, ref int v)
-        {
-            v -= 10;
-        }
-
-        internal bool <Main>b__0_2(Attributes ea)
-        {
-            return false;
-        }
-
-        internal void <Main>b__0_3(Attributes pa, Attributes ea, ref int v)
-        {
-            v = v >> 1;
-        }
-
-        internal bool <Main>b__0_4(Attributes ea)
-        {
-            return false;
-        }
     }
 }
-}
-

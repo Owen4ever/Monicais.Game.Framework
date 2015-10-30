@@ -57,6 +57,8 @@ namespace Monicais.Core
                     action.Suspend(this);
         }
 
+        public IEntity AttachedOn { get; set; }
+
         public void TestAndDo(IEntity entity, params object[] args)
         {
         }

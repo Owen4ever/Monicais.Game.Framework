@@ -20,6 +20,8 @@ namespace Monicais.Core
 
         void SuspendAll();
 
+        IEntity AttachedOn { get; set; }
+
         void Update();
 
         List<IAction> CurrentActions { get; }
