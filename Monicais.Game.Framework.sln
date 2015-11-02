@@ -17,6 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monicais.Plugin", "Monicais
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monicais.Console", "Monicais.Console\Monicais.Console.csproj", "{A3E0056E-61BB-4383-A9FA-88DB2CA99AB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{216B7ABB-83AA-4B80-92B6-60340FDEAF26} = {216B7ABB-83AA-4B80-92B6-60340FDEAF26}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monicais.Core.Extend", "Monicais.Core.Extend\Monicais.Core.Extend.csproj", "{216B7ABB-83AA-4B80-92B6-60340FDEAF26}"
 EndProject

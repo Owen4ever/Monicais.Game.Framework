@@ -5,34 +5,48 @@ using System;
 namespace Monicais.Core
 {
 
-    public interface IAction
+    public class MonoAction : NonNullDisplayable
     {
 
-        void Suspend(IEntity entity);
+        public MonoAction(string name, ActionProcess process) : base(name)
+        {
+            Process = process;
+        }
 
-        void TestAndDoAction(IEntity entity, IActionArgs args);
+        public MonoAction(string name, string description, ActionProcess process) : base(name, description)
+        {
+            Process = process;
+        }
 
-        void Update(IEntity entity);
+        public void Suspend(IEntity entity, ActionSuspendType suspendType)
+        {
+            Process.Suspend(entity, suspendType);
+        }
 
-        bool IsProcessing { get; }
+        public void DoAction(IEntity entity)
+        {
+            Process.BeginProcess();
+        }
 
-        ActionUsingProcess Process { get; }
+        public void Update(IEntity entity)
+        {
+            if (!IsProcessing)
+                if (Process.Current(entity))
+                    Process.MoveNext();
+        }
 
-        string Name { get; }
+        public bool IsProcessing { get { return Process.IsProcessing; } }
+
+        public ActionProcess Process { get; private set; }
     }
 
     public interface IActionArgs { }
 
     [Serializable]
-    public sealed class ActionUsingProcess
+    public sealed class ActionProcess
     {
 
-        private readonly MonoProcess actions;
-        private int index;
-        private readonly Delegate[] invokeList;
-        private int len;
-
-        public ActionUsingProcess(MonoProcess process)
+        public ActionProcess(MonoActionProcess process)
         {
             if (process == null)
                 ArgumentNull.Throw("process");
@@ -42,29 +56,50 @@ namespace Monicais.Core
             Reset();
         }
 
+        public ActionProcess(params MonoActionProcess[] processes)
+        {
+            if (processes == null)
+                ArgumentNull.Throw("processes");
+            foreach (var process in processes)
+                if (actions != null)
+                    actions += process;
+                else
+                    actions = process;
+            invokeList = actions.GetInvocationList();
+            len = invokeList.Length;
+            Reset();
+        }
+
+        public bool HasNext { get { return index + 1 < len; } }
+
+        public void BeginProcess()
+        {
+            if (!IsProcessing)
+            {
+                Reset();
+                IsProcessing = true;
+            }
+        }
+
         public bool MoveNext()
         {
             if (IsProcessing)
-            {
-                if (index + 1 == len)
+                if ((++index) < len)
                     return IsProcessing = false;
                 else
-                {
-                    ++index;
                     return true;
-                }
-            } else
+            else
                 return false;
         }
 
-        public static ActionUsingProcess operator +(ActionUsingProcess mode, ActionUsingProcess addition)
+        public static ActionProcess operator +(ActionProcess mode, ActionProcess addition)
         {
             return mode + addition.actions;
         }
 
-        public static ActionUsingProcess operator +(ActionUsingProcess mode, MonoProcess addition)
+        public static ActionProcess operator +(ActionProcess mode, MonoActionProcess addition)
         {
-            return new ActionUsingProcess(mode.actions + addition);
+            return new ActionProcess(mode.actions + addition);
         }
 
         public void Reset()
@@ -72,22 +107,44 @@ namespace Monicais.Core
             index = 0;
         }
 
-        public void Suspend(IEntity entity)
+        public void Suspend(IEntity entity, ActionSuspendType suspendType)
         {
-            if (MoveNext())
-                Current(entity, true);
-            IsProcessing = false;
-            Reset();
+            if (IsProcessing)
+            {
+                if (MoveNext())
+                    Current(entity, (ActionStatus) suspendType);
+                IsProcessing = false;
+                Reset();
+            }
         }
 
-        public MonoProcess Current
+        internal MonoActionProcess Current
         {
-            get { return (MonoProcess) invokeList[index]; }
+            get { return (MonoActionProcess) invokeList[index]; }
         }
 
         public bool IsProcessing { get; internal set; }
 
-        [Serializable]
-        public delegate bool MonoProcess(IEntity player, bool suspend = false);
+        private readonly MonoActionProcess actions;
+        private readonly Delegate[] invokeList;
+        private int index;
+        private int len;
+    }
+
+    [Serializable]
+    public delegate bool MonoActionProcess(IEntity entity, ActionStatus status = ActionStatus.CONTINUE);
+
+    [Serializable]
+    public enum ActionStatus : uint
+    {
+        CONTINUE = 0,
+        SUSPEND = 1,
+        FORCE_SUSPEND = 2
+    }
+
+    public enum ActionSuspendType : uint
+    {
+        NORMAL = ActionStatus.SUSPEND,
+        FORCE = ActionStatus.FORCE_SUSPEND
     }
 }

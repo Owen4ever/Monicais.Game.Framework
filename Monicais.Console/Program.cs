@@ -1,14 +1,21 @@
 ﻿
+using Monicais.Core;
 using Monicais.Property;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace Monicais.ConsoleTest
 {
 
     internal class Program
     {
+
         private static void Main(string[] args)
+        {
+            ActionProcess process = new ActionProcess();
+            MonoAction action = new MonoAction("test", null);
+        }
+
+        private static void Main1(string[] args)
         {
             PropertyListManager manager2 = new PropertyManager().NewPropertyListManager("pl/role");
             PropertyID pid_hp = manager2.NewPropertyID("HealthPoint", "HP", "Health Points");
@@ -34,7 +41,7 @@ namespace Monicais.ConsoleTest
             creater.SetParentFor(pid_mp, 0, pid_mp_max);
             creater.SetParentFor(pid_vi, 0, pid_vi_max);
             PropertyList list = manager2.CreateProperties(creater);
-            foreach (object obj2 in list)
+            foreach (var obj2 in list)
             {
                 Console.WriteLine(obj2);
             }

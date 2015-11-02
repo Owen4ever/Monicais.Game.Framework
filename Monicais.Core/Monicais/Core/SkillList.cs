@@ -1,22 +1,15 @@
-﻿namespace Monicais.Core
+﻿
+using Monicais.ThrowHelper;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+namespace Monicais.Core
 {
-    using Monicais.ThrowHelper;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Runtime.Serialization;
 
     [Serializable]
     public class SkillList : ISerializable
     {
-        private List<SkillAction> allSkills;
-        [NonSerialized]
-        private List<SkillAction> activeSkills;
-        [NonSerialized]
-        private List<SkillAction> continuingSkills;
-        [NonSerialized]
-        private List<SkillAction> passiveSkills;
 
         public SkillList()
         {
@@ -72,13 +65,10 @@
                 {
                     case SkillActionUsingType.ACTIVE:
                         return activeSkills;
-
                     case SkillActionUsingType.CONTINUING:
                         return continuingSkills;
-
                     case SkillActionUsingType.PASSIVE:
                         return passiveSkills;
-
                     case SkillActionUsingType.ALL:
                         return allSkills;
                 }
@@ -93,5 +83,13 @@
         {
             get { return allSkills; }
         }
+
+        private List<SkillAction> allSkills;
+        [NonSerialized]
+        private List<SkillAction> activeSkills;
+        [NonSerialized]
+        private List<SkillAction> continuingSkills;
+        [NonSerialized]
+        private List<SkillAction> passiveSkills;
     }
 }

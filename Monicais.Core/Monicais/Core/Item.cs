@@ -42,78 +42,13 @@ namespace Monicais.Core
     }
 
     [Serializable]
-    public class Item : NonNullDisplayable, IEntity
+    public class Item : AbstractEntity
     {
 
-        private List<IAction> actions;
-        private EntityStatus status;
+        public Item(int id, string name, string desc, PropertyList properties)
+            : base(id, name, desc, properties)
+        { }
 
-        public Item(int id, string name, string desc, PropertyList properties) : base(name, desc)
-        {
-            ID = id;
-            Properties = properties;
-            status = EntityStatus.NormalStatus;
-        }
-
-        public void AddAction(IAction action)
-        {
-            if (action == null)
-                ArgumentNull.Throw("action");
-            actions.Add(action);
-        }
-
-        public void RemoveAction(IAction action)
-        {
-            actions.Remove(action);
-        }
-
-        public void AddCurrentAction(IAction action)
-        {
-            CurrentActions.Add(action);
-        }
-
-        public void RemoveCurrentAction(IAction action)
-        {
-            CurrentActions.Remove(action);
-        }
-
-        public void Suspend(string actionName)
-        {
-            IAction action = CurrentActions.Find(a => a.Name.Equals(actionName));
-            if (action == null)
-                action.Suspend(this);
-        }
-
-        public void SuspendAll()
-        {
-            if (CurrentActions.Count > 0)
-                foreach (IAction action in CurrentActions)
-                    action.Suspend(this);
-        }
-
-        public IEntity AttachedOn { get; set; }
-
-        public void Update()
-        {
-            CurrentActions.ForEach(a => a.Update(this));
-        }
-
-        public List<IAction> CurrentActions { get; private set; }
-
-        public int ID { get; private set; }
-
-        public PropertyList Properties { get; private set; }
-
-        public EntityStatus Status
-        {
-            get { return status; }
-            set
-            {
-                EntityStatus lastStatus = status;
-                lastStatus.Deactivate(value, this);
-                status = value;
-                status.Activate(lastStatus, this);
-            }
-        }
+        public SkillList Skills { get; private set; }
     }
 }

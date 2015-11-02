@@ -1,5 +1,6 @@
 ﻿
 using Monicais.Property;
+using Monicais.ThrowHelper;
 using System;
 using System.Collections.Generic;
 
@@ -8,29 +9,157 @@ namespace Monicais.Core
 
     public interface IEntity
     {
-        void AddAction(IAction action);
-
-        void AddCurrentAction(IAction action);
-
-        void RemoveAction(IAction action);
-
-        void RemoveCurrentAction(IAction action);
-
-        void Suspend(string action);
-
-        void SuspendAll();
-
-        IEntity AttachedOn { get; set; }
-
-        void Update();
-
-        List<IAction> CurrentActions { get; }
 
         int ID { get; }
 
         PropertyList Properties { get; }
 
         EntityStatus Status { get; set; }
+
+        IEntity AttachedOn { get; set; }
+
+        void Update();
+
+        void AddAction(MonoAction action);
+
+        void RemoveAction(MonoAction action);
+
+        List<MonoAction> AllActions { get; }
+
+        void AddCurrentAction(MonoAction action);
+
+        void RemoveCurrentAction(MonoAction action);
+
+        List<MonoAction> CurrentActions { get; }
+
+        void Suspend(string actionName, ActionSuspendType suspendType);
+
+        void SuspendFirst(string actionName, ActionSuspendType suspendType);
+
+        void SuspendIf(Predicate<MonoAction> predicate, ActionSuspendType suspendType);
+
+        void SuspendAll(ActionSuspendType suspendType);
+    }
+
+    [Serializable]
+    public abstract class AbstractEntity : NonNullDisplayable, IEntity
+    {
+
+        protected AbstractEntity(int id, string name, PropertyList properties)
+            : this(id, name, properties, null)
+        { }
+
+        protected AbstractEntity(int id, string name, PropertyList properties,
+            EntityStatus status) : base(name)
+        {
+            if (properties == null)
+                ArgumentNull.Throw("properties");
+            ID = id;
+            Properties = properties;
+            this.status = status ?? EntityStatus.NormalStatus;
+        }
+
+        protected AbstractEntity(int id, string name, string desc, PropertyList properties)
+            : this(id, name, desc, properties, null)
+        { }
+
+        protected AbstractEntity(int id, string name, string desc, PropertyList properties,
+            EntityStatus status) : base(name, desc)
+        {
+            if (properties == null)
+                ArgumentNull.Throw("properties");
+            ID = id;
+            Properties = properties;
+            this.status = status ?? EntityStatus.NormalStatus;
+        }
+
+        public int ID { get; private set; }
+
+        public EntityStatus Status
+        {
+            get { return status; }
+            set
+            {
+#if DEBUG
+                if (value == null)
+                    ArgumentNull.Throw("status");
+#endif
+                EntityStatus lastStatus = status;
+                lastStatus.Deactivate(value, this);
+                status = value;
+                status.Activate(lastStatus, this);
+            }
+        }
+        private EntityStatus status;
+
+        public IEntity AttachedOn { get; set; }
+
+        public PropertyList Properties { get; private set; }
+
+        public void Update()
+        {
+            status.Update();
+            Properties.Update();
+            CurrentActions.ForEach(a => a.Update(this));
+        }
+
+        public void AddAction(MonoAction action)
+        {
+            if (action == null)
+                ArgumentNull.Throw("action");
+            actions.Add(action);
+        }
+
+        public void RemoveAction(MonoAction action)
+        {
+            actions.Remove(action);
+        }
+
+        public List<MonoAction> AllActions { get { return actions; } }
+        private List<MonoAction> actions;
+
+        public void AddCurrentAction(MonoAction action)
+        {
+            CurrentActions.Add(action);
+        }
+
+        public void RemoveCurrentAction(MonoAction action)
+        {
+            CurrentActions.Remove(action);
+        }
+
+        public List<MonoAction> CurrentActions { get; private set; }
+
+        public void Suspend(string actionName, ActionSuspendType suspendType)
+        {
+            foreach (var currentAction in CurrentActions)
+                if (currentAction.Name.Equals(actionName))
+                    currentAction.Suspend(this, suspendType);
+        }
+
+        public void SuspendFirst(string actionName, ActionSuspendType suspendType)
+        {
+            foreach (var currentAction in CurrentActions)
+                if (currentAction.Name.Equals(actionName))
+                {
+                    currentAction.Suspend(this, suspendType);
+                    break;
+                }
+        }
+
+        public void SuspendIf(Predicate<MonoAction> predicate, ActionSuspendType suspendType)
+        {
+            foreach (var currentAction in CurrentActions)
+                if (predicate(currentAction))
+                    currentAction.Suspend(this, suspendType);
+        }
+
+        public void SuspendAll(ActionSuspendType suspendType)
+        {
+            if (CurrentActions.Count > 0)
+                foreach (MonoAction action in CurrentActions)
+                    action.Suspend(this, suspendType);
+        }
     }
 
     [Serializable]
