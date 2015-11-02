@@ -35,7 +35,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
@@ -44,7 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Monicais\Core\Role.cs" />
+    <Compile Include="Monicais\Core\Character.cs" />
     <Compile Include="Monicais\Core\Mechanism\BattleMechanism.cs" />
     <Compile Include="Monicais\Core\Item.cs" />
     <Compile Include="Monicais\Core\Action.cs" />

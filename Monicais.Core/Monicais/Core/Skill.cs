@@ -10,15 +10,7 @@ namespace Monicais.Core
 {
 
     [Serializable]
-    public sealed class SkillInfo : NonNullDisplayable
-    {
-        public SkillInfo(string name) : base(name, null) { }
-
-        public SkillInfo(string name, string description) : base(name, description) { }
-    }
-
-    [Serializable]
-    public enum SkillUsingType : byte
+    public enum SkillActionUsingType : byte
     {
         ACTIVE = 1,
         CONTINUING = 2,
@@ -88,114 +80,48 @@ namespace Monicais.Core
     }
 
     [Serializable]
-    public sealed class SkillUsingProcess
-    {
-
-        private readonly MonoProcess actions;
-        private int index;
-        private readonly Delegate[] invokeList;
-        private int len;
-
-        public SkillUsingProcess(MonoProcess process)
-        {
-            if (process == null)
-                ArgumentNull.Throw("process");
-            actions = process;
-            invokeList = process.GetInvocationList();
-            len = invokeList.Length;
-            Reset();
-        }
-
-        public bool MoveNext()
-        {
-            if (IsProcessing)
-            {
-                if (index + 1 == len)
-                    return IsProcessing = false;
-                else
-                {
-                    ++index;
-                    return true;
-                }
-            } else
-                return false;
-        }
-
-        public static SkillUsingProcess operator +(SkillUsingProcess mode, SkillUsingProcess addition)
-        {
-            return mode + addition.actions;
-        }
-
-        public static SkillUsingProcess operator +(SkillUsingProcess mode, MonoProcess addition)
-        {
-            return new SkillUsingProcess(mode.actions + addition);
-        }
-
-        public void Reset()
-        {
-            index = 0;
-        }
-
-        public void Suspend(IEntity entity)
-        {
-            if (MoveNext())
-                Current(entity, new Vector3(0f, 0f), true);
-            IsProcessing = false;
-            Reset();
-        }
-
-        public MonoProcess Current
-        {
-            get { return (MonoProcess) invokeList[index]; }
-        }
-
-        public bool IsProcessing { get; internal set; }
-
-        [Serializable]
-        public delegate bool MonoProcess(IEntity player, Vector3 playerObj, bool suspend = false);
-    }
-
-    [Serializable]
     public class SkillArgs : IActionArgs { }
 
     [Serializable]
-    public delegate void SkillCallBack(IEntity entity, int originalDamage, int finalDamage);
-
-    [Serializable]
-    public class Skill : IAction, IDisplayable, INameable
+    public class SkillAction : NonNullDisplayable, IAction
     {
 
         private List<IEffect> effects;
 
-        public Skill(SkillInfo info, ISkillCondition condition, SkillUsingType usingType,
-            SkillUsingProcess process, SkillCallBack callback, SkillUpgrader upgrader,
+        public SkillAction(string name, ISkillCondition condition, SkillActionUsingType usingType,
+            ActionUsingProcess process, SkillUpgrader upgrader,
             List<IEffect> effectList, Attributes attributes)
+            : this(name, null, condition, usingType, process, upgrader, effectList, attributes)
+        { }
+
+        public SkillAction(string name, string description, ISkillCondition condition, SkillActionUsingType usingType,
+            ActionUsingProcess process, SkillUpgrader upgrader,
+            List<IEffect> effectList, Attributes attributes) : base(name, description)
         {
-            if (info == null)
-                ArgumentNull.Throw("info");
             if (process == null)
                 ArgumentNull.Throw("process");
-            if (callback == null)
-                ArgumentNull.Throw("callback");
+            if (condition == null)
+                ArgumentNull.Throw("condition");
             if (upgrader == null)
                 ArgumentNull.Throw("upgrader");
             if (effectList == null || effectList.Count == 0)
                 ArgumentNull.Throw("effects");
             if (attributes == null)
                 ArgumentNull.Throw("attributes");
-            Info = info;
             UsingType = usingType;
-            UsingProcess = process;
-            CallBack = callback;
+            Process = process;
+            Condition = condition;
             Upgrader = upgrader;
             effects = effectList;
             Attributes = attributes;
         }
 
+        private ISkillCondition Condition { get; set; }
+
         public void Suspend(IEntity entity)
         {
-            if (UsingProcess.IsProcessing)
-                UsingProcess.Suspend(entity);
+            if (IsProcessing)
+                Process.Suspend(entity);
         }
 
         public void TestAndDoAction(IEntity entity, IActionArgs args)
@@ -204,43 +130,43 @@ namespace Monicais.Core
 
         public void Update(IEntity entity)
         {
+            if (IsProcessing) ;
         }
 
         public Attributes Attributes { get; private set; }
-
-        public SkillCallBack CallBack { get; private set; }
-
-        public string Description
-        {
-            get { return Info.Description; }
-            set { Info.Description = value; }
-        }
 
         public List<IEffect> Effects
         {
             get { return effects; }
         }
 
-        public SkillInfo Info { get; private set; }
-
         public bool IsProcessing
         {
-            get { return UsingProcess.IsProcessing; }
-            private set { UsingProcess.IsProcessing = true; }
-        }
-
-        public string Name
-        {
-            get { return Info.Name; }
-            set { Info.Name = value; }
+            get { return Process.IsProcessing; }
+            private set { Process.IsProcessing = true; }
         }
 
         public SkillUpgrader Upgrader { get; private set; }
 
-        public SkillUsingProcess UsingMode { get; private set; }
+        public ActionUsingProcess Process { get; private set; }
 
-        public SkillUsingProcess UsingProcess { get; private set; }
+        public SkillActionUsingType UsingType { get; private set; }
+    }
 
-        public SkillUsingType UsingType { get; private set; }
+    public class Skill : INameable
+    {
+
+        public Skill() { }
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value ?? ""; }
+        }
+        private string name;
+
+        public List<SkillAction> Actions { get; private set; }
+
+        public void AddAction(SkillAction action) {  }
     }
 }

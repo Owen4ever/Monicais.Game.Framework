@@ -10,44 +10,44 @@
     [Serializable]
     public class SkillList : ISerializable
     {
-        private List<Skill> allSkills;
+        private List<SkillAction> allSkills;
         [NonSerialized]
-        private List<Skill> activeSkills;
+        private List<SkillAction> activeSkills;
         [NonSerialized]
-        private List<Skill> continuingSkills;
+        private List<SkillAction> continuingSkills;
         [NonSerialized]
-        private List<Skill> passiveSkills;
+        private List<SkillAction> passiveSkills;
 
         public SkillList()
         {
-            allSkills = new List<Skill>();
-            activeSkills = new List<Skill>();
-            continuingSkills = new List<Skill>();
-            passiveSkills = new List<Skill>();
+            allSkills = new List<SkillAction>();
+            activeSkills = new List<SkillAction>();
+            continuingSkills = new List<SkillAction>();
+            passiveSkills = new List<SkillAction>();
         }
 
         protected SkillList(SerializationInfo info, StreamingContext context)
         {
-            allSkills = (List<Skill>) info.GetValue("SKILLS", typeof(List<Skill>));
-            activeSkills = allSkills.FindAll(s => s.UsingType == SkillUsingType.ACTIVE);
-            continuingSkills = allSkills.FindAll(s => s.UsingType == SkillUsingType.CONTINUING);
-            passiveSkills = allSkills.FindAll(s => s.UsingType == SkillUsingType.PASSIVE);
+            allSkills = (List<SkillAction>) info.GetValue("SKILLS", typeof(List<SkillAction>));
+            activeSkills = allSkills.FindAll(s => s.UsingType == SkillActionUsingType.ACTIVE);
+            continuingSkills = allSkills.FindAll(s => s.UsingType == SkillActionUsingType.CONTINUING);
+            passiveSkills = allSkills.FindAll(s => s.UsingType == SkillActionUsingType.PASSIVE);
         }
 
-        public void AddSkill(Skill skill)
+        public void AddSkill(SkillAction skill)
         {
             switch (skill.UsingType)
             {
-                case SkillUsingType.ACTIVE:
+                case SkillActionUsingType.ACTIVE:
                     activeSkills.Add(skill);
                     return;
-                case SkillUsingType.CONTINUING:
+                case SkillActionUsingType.CONTINUING:
                     continuingSkills.Add(skill);
                     return;
-                case SkillUsingType.PASSIVE:
+                case SkillActionUsingType.PASSIVE:
                     passiveSkills.Add(skill);
                     return;
-                case SkillUsingType.ALL:
+                case SkillActionUsingType.ALL:
                     allSkills.Add(skill);
                     activeSkills.Add(skill);
                     continuingSkills.Add(skill);
@@ -64,22 +64,22 @@
             info.AddValue("SKILLS", allSkills);
         }
 
-        public List<Skill> this[SkillUsingType usingType]
+        public List<SkillAction> this[SkillActionUsingType usingType]
         {
             get
             {
                 switch (usingType)
                 {
-                    case SkillUsingType.ACTIVE:
+                    case SkillActionUsingType.ACTIVE:
                         return activeSkills;
 
-                    case SkillUsingType.CONTINUING:
+                    case SkillActionUsingType.CONTINUING:
                         return continuingSkills;
 
-                    case SkillUsingType.PASSIVE:
+                    case SkillActionUsingType.PASSIVE:
                         return passiveSkills;
 
-                    case SkillUsingType.ALL:
+                    case SkillActionUsingType.ALL:
                         return allSkills;
                 }
 #if DEBUG
@@ -89,7 +89,7 @@
             }
         }
 
-        public List<Skill> Skills
+        public List<SkillAction> Skills
         {
             get { return allSkills; }
         }

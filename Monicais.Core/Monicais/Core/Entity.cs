@@ -69,11 +69,32 @@ namespace Monicais.Core
 
     internal class MonoBehaviourFuncs
     {
+
+        // Before first update
+
         private void Awake() { }
+
+        private void Start() { }
+
+        // Update
+
+        private void Update() { }
 
         private void FixedUpdate() { }
 
         private void LateUpdate() { }
+
+        // Destroy
+
+        private void OnDestroy() { }
+
+        // Enable / Disable
+
+        private void OnEnable() { }
+
+        private void OnDisable() { }
+
+        // Application
 
         private void OnApplicationFocus() { }
 
@@ -81,9 +102,13 @@ namespace Monicais.Core
 
         private void OnApplicationQuit() { }
 
+        // Visible / Invisible
+
         private void OnBecameInvisible() { }
 
         private void OnBecameVisible() { }
+
+        // Collision
 
         private void OnCollisionEnter() { }
 
@@ -91,33 +116,43 @@ namespace Monicais.Core
 
         private void OnCollisionStay() { }
 
-        private void OnConnectedToServer() { }
-
         private void OnControllerColliderHit() { }
 
-        private void OnDestroy() { }
+        private void OnParticleCollision() { }
 
-        private void OnDisable() { }
-
-        private void OnDisconnectedFromServer() { }
+        // Gizmos
 
         private void OnDrawGizmos() { }
 
         private void OnDrawGizmosSelected() { }
 
-        private void OnEnable() { }
+        // Net Connect / Disconnect
 
         private void OnFailedToConnect() { }
 
         private void OnFailedToConnectToMasterServer() { }
 
-        private void OnGUI() { }
+        private void OnConnectedToServer() { }
 
-        private void OnJointBreak() { }
-
-        private void OnLevelWasLoaded() { }
+        private void OnDisconnectedFromServer() { }
 
         private void OnMasterServerEvent() { }
+
+        private void OnNetworkInstantiate() { }
+
+        private void OnPlayerConnected() { }
+
+        private void OnPlayerDisconnected() { }
+
+        private void OnSerializeNetworkView() { }
+
+        private void OnServerInitialized() { }
+
+        // GUI
+
+        private void OnGUI() { }
+
+        // Mouse
 
         private void OnMouseDown() { }
 
@@ -133,27 +168,21 @@ namespace Monicais.Core
 
         private void OnMouseUpAsButton() { }
 
-        private void OnNetworkInstantiate() { }
-
-        private void OnParticleCollision() { }
-
-        private void OnPlayerConnected() { }
-
-        private void OnPlayerDisconnected() { }
-
-        private void OnPostRender() { }
+        // Render
 
         private void OnPreCull() { }
 
         private void OnPreRender() { }
 
-        private void OnRenderImage() { }
+        private void OnWillRenderObject() { }
+
+        private void OnPostRender() { }
 
         private void OnRenderObject() { }
 
-        private void OnSerializeNetworkView() { }
+        private void OnRenderImage() { }
 
-        private void OnServerInitialized() { }
+        // Trigger
 
         private void OnTriggerEnter() { }
 
@@ -161,12 +190,16 @@ namespace Monicais.Core
 
         private void OnTriggerStay() { }
 
-        private void OnWillRenderObject() { }
+        // For Debug
 
         private void Reset() { }
 
-        private void Start() { }
+        // Joint Break
 
-        private void Update() { }
+        private void OnJointBreak() { }
+
+        // Level
+
+        private void OnLevelWasLoaded() { }
     }
 }

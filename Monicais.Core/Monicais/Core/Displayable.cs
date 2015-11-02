@@ -6,12 +6,14 @@
         string Name { get; set; }
     }
 
-    public interface IDisplayable : INameable
+    public interface IDescribable
     {
         string Description { get; set; }
     }
 
-    public abstract class Displayable : IDisplayable, INameable
+    public interface IDisplayable : INameable, IDescribable { }
+
+    public abstract class Displayable : IDisplayable
     {
 
         public Displayable(string name, string desc = null)
@@ -25,7 +27,7 @@
         public string Name { get; set; }
     }
 
-    public abstract class NonNullDisplayable : IDisplayable, INameable
+    public abstract class NonNullDisplayable : IDisplayable
     {
 
         public NonNullDisplayable(string name, string desc = "")
