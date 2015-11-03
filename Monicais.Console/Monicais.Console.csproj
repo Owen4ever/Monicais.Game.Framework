@@ -53,6 +53,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Monicais.Core.Extend\Monicais.Core.Extend.csproj">
+      <Project>{216b7abb-83aa-4b80-92b6-60340fdeaf26}</Project>
+      <Name>Monicais.Core.Extend</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Monicais.Core\Monicais.Core.csproj">
       <Project>{2a81a3e8-2833-4e06-b178-820367ae05ca}</Project>
       <Name>Monicais.Core</Name>

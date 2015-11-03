@@ -37,12 +37,23 @@ namespace Monicais.Core
 
         public Skill(string name, SkillActionUsingType usingType, SkillUpgrader upgrader)
         {
+            if (Upgrader == null)
+                ArgumentNull.Throw("Upgrader");
+            Name = name;
+            UsingType = usingType;
+            Upgrader = upgrader;
+            Attributes = new Attributes();
         }
 
         public string Name
         {
             get { return name; }
-            set { name = value ?? ""; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    ArgumentNull.Throw("name");
+                name = value;
+            }
         }
         private string name;
 

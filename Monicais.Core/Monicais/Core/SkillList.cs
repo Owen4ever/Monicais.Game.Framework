@@ -13,21 +13,21 @@ namespace Monicais.Core
 
         public SkillList()
         {
-            allSkills = new List<SkillAction>();
-            activeSkills = new List<SkillAction>();
-            continuingSkills = new List<SkillAction>();
-            passiveSkills = new List<SkillAction>();
+            allSkills = new List<Skill>();
+            activeSkills = new List<Skill>();
+            continuingSkills = new List<Skill>();
+            passiveSkills = new List<Skill>();
         }
 
         protected SkillList(SerializationInfo info, StreamingContext context)
         {
-            allSkills = (List<SkillAction>) info.GetValue("SKILLS", typeof(List<SkillAction>));
+            allSkills = (List<Skill>) info.GetValue("SKILLS", typeof(List<Skill>));
             activeSkills = allSkills.FindAll(s => s.UsingType == SkillActionUsingType.ACTIVE);
             continuingSkills = allSkills.FindAll(s => s.UsingType == SkillActionUsingType.CONTINUING);
             passiveSkills = allSkills.FindAll(s => s.UsingType == SkillActionUsingType.PASSIVE);
         }
 
-        public void AddSkill(SkillAction skill)
+        public void AddSkill(Skill skill)
         {
             switch (skill.UsingType)
             {
@@ -52,12 +52,12 @@ namespace Monicais.Core
 #endif
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("SKILLS", allSkills);
         }
 
-        public List<SkillAction> this[SkillActionUsingType usingType]
+        public List<Skill> this[SkillActionUsingType usingType]
         {
             get
             {
@@ -79,17 +79,17 @@ namespace Monicais.Core
             }
         }
 
-        public List<SkillAction> Skills
+        public List<Skill> Skills
         {
             get { return allSkills; }
         }
 
-        private List<SkillAction> allSkills;
+        private List<Skill> allSkills;
         [NonSerialized]
-        private List<SkillAction> activeSkills;
+        private List<Skill> activeSkills;
         [NonSerialized]
-        private List<SkillAction> continuingSkills;
+        private List<Skill> continuingSkills;
         [NonSerialized]
-        private List<SkillAction> passiveSkills;
+        private List<Skill> passiveSkills;
     }
 }

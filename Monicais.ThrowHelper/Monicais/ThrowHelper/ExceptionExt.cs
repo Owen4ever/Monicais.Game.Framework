@@ -4,6 +4,7 @@ using System;
 namespace Monicais.ThrowHelper
 {
 
+    [Serializable]
     public class AlreadyContainException : Exception
     {
         public AlreadyContainException() { }

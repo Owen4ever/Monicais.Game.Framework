@@ -9,25 +9,29 @@ namespace Monicais.Property
 
     public sealed class EffectPriority
     {
-        public const int Count = 16;
-        public static readonly EffectPriority EIGHTH = new EffectPriority(8);
-        public static readonly EffectPriority ELEVENTH = new EffectPriority(11);
-        public static readonly EffectPriority FIFTEENTH = new EffectPriority(15);
-        public static readonly EffectPriority FIFTH = new EffectPriority(5);
-        public static readonly EffectPriority FIRST = new EffectPriority(1);
-        public static readonly EffectPriority FOURTEENTH = new EffectPriority(14);
-        public static readonly EffectPriority FOURTH = new EffectPriority(4);
         public static readonly EffectPriority IMMEDIATE = new EffectPriority(0);
-        public static readonly EffectPriority NINTH = new EffectPriority(9);
-        private static readonly EffectPriority[] PRIORITIES =
-            { IMMEDIATE, FIRST, SECOND, THIRD, FOURTH, FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH, TENTH, ELEVENTH, TWELFTH, THIRTEENTH, FOURTEENTH, FIFTEENTH };
+        public static readonly EffectPriority FIRST = new EffectPriority(1);
         public static readonly EffectPriority SECOND = new EffectPriority(2);
-        public static readonly EffectPriority SEVENTH = new EffectPriority(7);
-        public static readonly EffectPriority SIXTH = new EffectPriority(6);
-        public static readonly EffectPriority TENTH = new EffectPriority(10);
         public static readonly EffectPriority THIRD = new EffectPriority(3);
-        public static readonly EffectPriority THIRTEENTH = new EffectPriority(13);
+        public static readonly EffectPriority FOURTH = new EffectPriority(4);
+        public static readonly EffectPriority FIFTH = new EffectPriority(5);
+        public static readonly EffectPriority SIXTH = new EffectPriority(6);
+        public static readonly EffectPriority SEVENTH = new EffectPriority(7);
+        public static readonly EffectPriority EIGHTH = new EffectPriority(8);
+        public static readonly EffectPriority NINTH = new EffectPriority(9);
+        public static readonly EffectPriority TENTH = new EffectPriority(10);
+        public static readonly EffectPriority ELEVENTH = new EffectPriority(11);
         public static readonly EffectPriority TWELFTH = new EffectPriority(12);
+        public static readonly EffectPriority THIRTEENTH = new EffectPriority(13);
+        public static readonly EffectPriority FOURTEENTH = new EffectPriority(14);
+        public static readonly EffectPriority FIFTEENTH = new EffectPriority(15);
+        public const int PriorityCount = 16;
+        private static readonly EffectPriority[] PRIORITIES =
+             {
+            IMMEDIATE, FIRST, SECOND, THIRD,
+            FOURTH, FIFTH, SIXTH, SEVENTH,
+            EIGHTH, NINTH, TENTH, ELEVENTH,
+            TWELFTH, THIRTEENTH, FOURTEENTH, FIFTEENTH };
 
         internal EffectPriority(int priority)
         {
@@ -36,12 +40,15 @@ namespace Monicais.Property
 
         public override bool Equals(object obj)
         {
+#if DEBUG
             EffectPriority priority = obj as EffectPriority;
             if (priority == null)
-            {
                 return false;
-            }
-            return (this.priority == priority.priority);
+            else
+                return this.priority == priority.priority;
+#else
+            return this.priority == ((EffectPriority) obj).priority;
+#endif
         }
 
         public override int GetHashCode()
@@ -51,13 +58,9 @@ namespace Monicais.Property
 
         public static List<Node>[] NewEffectLists<Node>()
         {
-            int num2;
-            List<Node>[] listArray = new List<Node>[0x10];
-            for (int i = 0; i < 0x10; i = num2)
-            {
+            List<Node>[] listArray = new List<Node>[PriorityCount];
+            for (int i = 0; i < PriorityCount; ++i)
                 listArray[i] = new List<Node>();
-                num2 = i + 1;
-            }
             return listArray;
         }
 
@@ -68,7 +71,7 @@ namespace Monicais.Property
 
         public static bool operator >(EffectPriority p1, EffectPriority p2)
         {
-            return (p1.priority > p2.priority);
+            return p1.priority > p2.priority;
         }
 
         public static implicit operator int (EffectPriority p)
@@ -78,21 +81,19 @@ namespace Monicais.Property
 
         public static implicit operator EffectPriority(int p)
         {
-            if ((p < 0) || (p >= 0x10))
-            {
+            if (p < 0 || p >= PriorityCount)
                 throwIndexOutOfRangeException();
-            }
             return PRIORITIES[p];
         }
 
         public static bool operator !=(EffectPriority p1, EffectPriority p2)
         {
-            return !object.Equals(p1, p2);
+            return !Equals(p1, p2);
         }
 
         public static bool operator <(EffectPriority p1, EffectPriority p2)
         {
-            return (p1.priority < p2.priority);
+            return p1.priority < p2.priority;
         }
 
         private static void throwIndexOutOfRangeException()
@@ -102,7 +103,7 @@ namespace Monicais.Property
 
         public override string ToString()
         {
-            return string.Format("[EffectID: Priority={0}]", this.priority);
+            return string.Format("[EffectID: Priority={0}]", priority);
         }
         private int priority;
     }
@@ -123,11 +124,15 @@ namespace Monicais.Property
 
         public override bool Equals(object obj)
         {
+#if DEBUG
             EffectID tid = obj as EffectID;
             if (tid != null)
                 return ID == tid.ID;
             else
                 return false;
+#else
+            return ID == ((EffectID) obj).ID;
+#endif
         }
 
         public override int GetHashCode()
@@ -180,17 +185,10 @@ namespace Monicais.Property
     }
 
     [Serializable]
-    public abstract class IEffect : ISerializable
+    public abstract class IEffect
     {
 
         protected IEffect(EffectID id, PropertyID affectTo) : this(id, affectTo, null) { }
-
-        protected IEffect(SerializationInfo info, StreamingContext context)
-        {
-            ID = (EffectID) info.GetValue("ID", typeof(EffectID));
-            AffectTo = (PropertyID) info.GetValue("AFFECT_TO", typeof(PropertyID));
-            DefaultAttributes = (ReadOnlyAttributes) info.GetValue("DEFAULT_ATTRIBUTES", typeof(ReadOnlyAttributes));
-        }
 
         protected IEffect(EffectID id, PropertyID affectTo, Attributes defaultAttrs)
         {
@@ -205,13 +203,6 @@ namespace Monicais.Property
 
         public abstract void Affect(Attributes propertyAttrs, Attributes effectAttrs, ref int val);
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("ID", this.ID);
-            info.AddValue("AFFECT_TO", this.AffectTo);
-            info.AddValue("DEFAULT_ATTRIBUTES", this.DefaultAttributes);
-        }
-
         public abstract bool Update(Attributes attrs);
 
         public PropertyID AffectTo { get; private set; }
@@ -224,11 +215,11 @@ namespace Monicais.Property
     [Serializable]
     public enum EffectType
     {
-        ALL = 7,
-        BOTH_BUFF = 6,
+        NORMAL = 1,
         BUFF = 2,
-        DEBUFF = 4,
-        NORMAL = 1
+        DEBUFF = 3,
+        BOTH_BUFF = 4,
+        ALL = 5
     }
 
     [Serializable]
@@ -236,12 +227,6 @@ namespace Monicais.Property
     {
         private EffectProcessor processor;
         private EffectUpdater updater;
-
-        protected DefaultEffect(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            processor = (EffectProcessor) info.GetValue("PROCESSOR", typeof(EffectProcessor));
-            updater = (EffectUpdater) info.GetValue("UPDATER", typeof(EffectUpdater));
-        }
 
         public DefaultEffect(EffectID id, PropertyID affectTo, EffectProcessor processor)
             : this(id, affectTo, null, processor)
@@ -263,13 +248,6 @@ namespace Monicais.Property
         public override void Affect(Attributes propertyAttrs, Attributes effectAttrs, ref int val)
         {
             processor(propertyAttrs, effectAttrs, ref val);
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("PROCESSOR", processor);
-            info.AddValue("UPDATER", updater);
         }
 
         public override bool Update(Attributes attrs)

@@ -11,8 +11,13 @@ namespace Monicais.ConsoleTest
 
         private static void Main(string[] args)
         {
-            ActionProcess process = new ActionProcess();
-            MonoAction action = new MonoAction("test", null);
+            ActionProcesses process = new ActionProcesses(new TimeMonoActionProcess(1,
+                (e, t) =>
+            {
+                Console.WriteLine("Total excuted: " + t);
+                return false;
+            }));
+            MonoAction action = new MonoAction("test", process);
         }
 
         private static void Main1(string[] args)

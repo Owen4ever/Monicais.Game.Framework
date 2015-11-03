@@ -26,19 +26,17 @@ namespace Monicais.Core
 
         List<MonoAction> AllActions { get; }
 
-        void AddCurrentAction(MonoAction action);
-
-        void RemoveCurrentAction(MonoAction action);
+        void TakeAction(MonoAction action);
 
         List<MonoAction> CurrentActions { get; }
 
-        void Suspend(string actionName, ActionSuspendType suspendType);
+        void SuspendAction(string actionName, ActionSuspendType suspendType);
 
-        void SuspendFirst(string actionName, ActionSuspendType suspendType);
+        void SuspendActionIf(Predicate<MonoAction> predicate, ActionSuspendType suspendType);
 
-        void SuspendIf(Predicate<MonoAction> predicate, ActionSuspendType suspendType);
+        void SuspendFirstAction(string actionName, ActionSuspendType suspendType);
 
-        void SuspendAll(ActionSuspendType suspendType);
+        void SuspendAllAction(ActionSuspendType suspendType);
     }
 
     [Serializable]
@@ -100,7 +98,7 @@ namespace Monicais.Core
         {
             status.Update();
             Properties.Update();
-            CurrentActions.ForEach(a => a.Update(this));
+            CurrentActions.ForEach(a => a.Update());
         }
 
         public void AddAction(MonoAction action)
@@ -118,48 +116,54 @@ namespace Monicais.Core
         public List<MonoAction> AllActions { get { return actions; } }
         private List<MonoAction> actions;
 
-        public void AddCurrentAction(MonoAction action)
+        public void TakeAction(MonoAction action)
         {
             CurrentActions.Add(action);
+            action.Begin(this);
         }
 
-        public void RemoveCurrentAction(MonoAction action)
-        {
-            CurrentActions.Remove(action);
-        }
-
-        public List<MonoAction> CurrentActions { get; private set; }
-
-        public void Suspend(string actionName, ActionSuspendType suspendType)
-        {
-            foreach (var currentAction in CurrentActions)
-                if (currentAction.Name.Equals(actionName))
-                    currentAction.Suspend(this, suspendType);
-        }
-
-        public void SuspendFirst(string actionName, ActionSuspendType suspendType)
+        public void SuspendAction(string actionName, ActionSuspendType suspendType)
         {
             foreach (var currentAction in CurrentActions)
                 if (currentAction.Name.Equals(actionName))
                 {
                     currentAction.Suspend(this, suspendType);
+                    CurrentActions.Remove(currentAction);
+                }
+        }
+
+        public void SuspendActionIf(Predicate<MonoAction> predicate, ActionSuspendType suspendType)
+        {
+            foreach (var currentAction in CurrentActions)
+                if (predicate(currentAction))
+                {
+                    currentAction.Suspend(this, suspendType);
+                    CurrentActions.Remove(currentAction);
+                }
+        }
+
+        public void SuspendFirstAction(string actionName, ActionSuspendType suspendType)
+        {
+            foreach (var currentAction in CurrentActions)
+                if (currentAction.Name.Equals(actionName))
+                {
+                    currentAction.Suspend(this, suspendType);
+                    CurrentActions.Remove(currentAction);
                     break;
                 }
         }
 
-        public void SuspendIf(Predicate<MonoAction> predicate, ActionSuspendType suspendType)
-        {
-            foreach (var currentAction in CurrentActions)
-                if (predicate(currentAction))
-                    currentAction.Suspend(this, suspendType);
-        }
-
-        public void SuspendAll(ActionSuspendType suspendType)
+        public void SuspendAllAction(ActionSuspendType suspendType)
         {
             if (CurrentActions.Count > 0)
+            {
                 foreach (MonoAction action in CurrentActions)
                     action.Suspend(this, suspendType);
+                CurrentActions.Clear();
+            }
         }
+
+        public List<MonoAction> CurrentActions { get; private set; }
     }
 
     [Serializable]
@@ -168,7 +172,9 @@ namespace Monicais.Core
 
         private static EntityStatus NORMAL_STATUS = new NonActionEntityStatus();
 
-        protected EntityStatus() { }
+        protected EntityStatus(string id) { ID = id; }
+
+        public string ID { get; private set; }
 
         public abstract void Activate(EntityStatus lastStatus, IEntity entity);
 
@@ -184,7 +190,7 @@ namespace Monicais.Core
     [Serializable]
     internal class NonActionEntityStatus : EntityStatus
     {
-        internal NonActionEntityStatus()
+        internal NonActionEntityStatus() : base("")
         {
             NormalStatus = this;
         }

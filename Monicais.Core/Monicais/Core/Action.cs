@@ -8,12 +8,12 @@ namespace Monicais.Core
     public class MonoAction : NonNullDisplayable
     {
 
-        public MonoAction(string name, ActionProcess process) : base(name)
+        public MonoAction(string name, ActionProcesses process) : base(name)
         {
             Process = process;
         }
 
-        public MonoAction(string name, string description, ActionProcess process) : base(name, description)
+        public MonoAction(string name, string description, ActionProcesses process) : base(name, description)
         {
             Process = process;
         }
@@ -23,30 +23,33 @@ namespace Monicais.Core
             Process.Suspend(entity, suspendType);
         }
 
-        public void DoAction(IEntity entity)
+        public void Begin(IEntity entity)
         {
             Process.BeginProcess();
+            EntityToDo = entity;
         }
 
-        public void Update(IEntity entity)
+        public void Update()
         {
             if (!IsProcessing)
-                if (Process.Current(entity))
+                if (Process.Current(EntityToDo))
                     Process.MoveNext();
         }
 
         public bool IsProcessing { get { return Process.IsProcessing; } }
 
-        public ActionProcess Process { get; private set; }
+        public ActionProcesses Process { get; private set; }
+
+        private IEntity EntityToDo { get; set; }
     }
 
     public interface IActionArgs { }
 
     [Serializable]
-    public sealed class ActionProcess
+    public sealed class ActionProcesses
     {
 
-        public ActionProcess(MonoActionProcess process)
+        public ActionProcesses(MonoActionProcess process)
         {
             if (process == null)
                 ArgumentNull.Throw("process");
@@ -56,7 +59,7 @@ namespace Monicais.Core
             Reset();
         }
 
-        public ActionProcess(params MonoActionProcess[] processes)
+        public ActionProcesses(params MonoActionProcess[] processes)
         {
             if (processes == null)
                 ArgumentNull.Throw("processes");
@@ -65,6 +68,20 @@ namespace Monicais.Core
                     actions += process;
                 else
                     actions = process;
+            invokeList = actions.GetInvocationList();
+            len = invokeList.Length;
+            Reset();
+        }
+
+        public ActionProcesses(params IMonoActionProcess[] processes)
+        {
+            if (processes == null)
+                ArgumentNull.Throw("processes");
+            foreach (var process in processes)
+                if (actions != null)
+                    actions += process.MonoActionProcess;
+                else
+                    actions = process.MonoActionProcess;
             invokeList = actions.GetInvocationList();
             len = invokeList.Length;
             Reset();
@@ -92,14 +109,14 @@ namespace Monicais.Core
                 return false;
         }
 
-        public static ActionProcess operator +(ActionProcess mode, ActionProcess addition)
+        public static ActionProcesses operator +(ActionProcesses mode, ActionProcesses addition)
         {
             return mode + addition.actions;
         }
 
-        public static ActionProcess operator +(ActionProcess mode, MonoActionProcess addition)
+        public static ActionProcesses operator +(ActionProcesses mode, MonoActionProcess addition)
         {
-            return new ActionProcess(mode.actions + addition);
+            return new ActionProcesses(mode.actions + addition);
         }
 
         public void Reset()
@@ -134,12 +151,19 @@ namespace Monicais.Core
     [Serializable]
     public delegate bool MonoActionProcess(IEntity entity, ActionStatus status = ActionStatus.CONTINUE);
 
+    public interface IMonoActionProcess
+    {
+
+        bool MonoActionProcess(IEntity entity, ActionStatus status = ActionStatus.CONTINUE);
+    }
+
     [Serializable]
     public enum ActionStatus : uint
     {
-        CONTINUE = 0,
-        SUSPEND = 1,
-        FORCE_SUSPEND = 2
+        BEGIN = 1,
+        CONTINUE = 2,
+        SUSPEND = 4,
+        FORCE_SUSPEND = 8
     }
 
     public enum ActionSuspendType : uint
